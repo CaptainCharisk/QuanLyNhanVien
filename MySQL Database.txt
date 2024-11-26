@@ -1,0 +1,52 @@
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE IF NOT EXISTS employee_management;
+USE employee_management;
+
+-- Bảng employees (chứa thông tin chung của tất cả nhân viên)
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    birth_date DATE,
+    phone VARCHAR(15),
+    email VARCHAR(100),
+    employee_type ENUM('0', '1', '2') NOT NULL COMMENT '0: Experience, 1: Fresher, 2: Intern',
+    employee_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Bảng experience_employees (chứa thông tin của nhân viên Experience)
+CREATE TABLE experience_employees (
+    id INT PRIMARY KEY,
+    exp_in_year INT,
+    pro_skill VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES employees(id) ON DELETE CASCADE
+);
+
+-- Bảng fresher_employees (chứa thông tin của nhân viên Fresher)
+CREATE TABLE fresher_employees (
+    id INT PRIMARY KEY,
+    graduation_date DATE,
+    graduation_rank VARCHAR(50),
+    education VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES employees(id) ON DELETE CASCADE
+);
+
+-- Bảng intern_employees (chứa thông tin của nhân viên Intern)
+CREATE TABLE intern_employees (
+    id INT PRIMARY KEY,
+    majors VARCHAR(100),
+    semester VARCHAR(50),
+    university_name VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES employees(id) ON DELETE CASCADE
+);
+
+-- Bảng certificates (chứa thông tin bằng cấp của nhân viên)
+CREATE TABLE certificates (
+    certificated_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT,
+    certificate_name VARCHAR(100),
+    certificate_rank VARCHAR(50),
+    certificated_date DATE,
+    FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+);
